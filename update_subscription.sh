@@ -38,7 +38,7 @@ subscription_url="https://justmysocks3.net/members/getsub.php?service=${server}&
 sing_config="./config-template.json"
 
 subs_resp=$(curl -s "${subscription_url}")
-config_file=$(jq '.outbounds = [{ "type": "selector", "tag": "proxy", "outbounds": []}]' "${sing_config}")
+config_file=$(jq '.outbounds = [{ "type": "urltest", "tag": "proxy", "outbounds": []}]' "${sing_config}")
 
 while IFS= read -r line; do
   # Decode the base64 encoded string
