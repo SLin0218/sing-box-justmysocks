@@ -6,30 +6,19 @@
 server=""
 id=""
 
-logInfo() {
-  case "$(uname -a)" in
-  *Android*)
-    log "Info" "$1"
-    ;;
-  *)
-    echo "$1"
-    ;;
-  esac
-}
-
 if command -v jq >/dev/null 2>&1; then
-  logInfo "Using jq at $(jq --version)"
+  echo "Using jq at $(jq --version)"
 else
   if [ -d "/data/data/com.termux/files/usr/bin/jq" ]; then
     export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
   else
-    logInfo "jq is not installed. Please install jq to continue."
-    logInfo "On Termux, you can install it using: apt install jq"
-    logInfo "On Linux, you can install it using: apt install jq"
-    logInfo "On macOS, you can install it using: brew install jq"
+    echo "jq is not installed. Please install jq to continue."
+    echo "On Termux, you can install it using: apt install jq"
+    echo "On Linux, you can install it using: apt install jq"
+    echo "On macOS, you can install it using: brew install jq"
     exit 1
   fi
-  logInfo "Using jq at $(jq --version)"
+  echo "Using jq at $(jq --version)"
 fi
 
 subscription_url="https://justmysocks3.net/members/getsub.php?service=${server}&id=${id}"
@@ -39,6 +28,8 @@ sing_config="./config-template.json"
 
 subs_resp=$(curl -s "${subscription_url}")
 config_file=$(jq '.outbounds = [{ "type": "urltest", "tag": "proxy", "outbounds": []}]' "${sing_config}")
+
+sing_config="/data/adb/box/sing-box/config.json"
 
 while IFS= read -r line; do
   # Decode the base64 encoded string
@@ -52,7 +43,7 @@ while IFS= read -r line; do
       awk -F: -v tag_name="$tag_name" \
         '{print "{\"tag\": \"" tag_name "\", \"type\": \"shadowsocks\", \"server\": \"" $3 "\", \"server_port\": " $4 ", \"password\": \""$2"\", \"method\": \""$1"\"}"}')
     config_file=$(echo "$config_file" | jq --argjson ss "$ss_server" '.outbounds += [$ss]')
-    logInfo "found shadowsock config $tag_name"
+    echo "found shadowsock config $tag_name"
   else
     tag_name=$(echo "$line_decode" | jq -r '.ps' | grep -oE '@([0-9a-zA-Z]+)\.' | sed 's/[@|\.]//g')
     vm_server=$(echo "$line_decode" | jq --arg tag_name "$tag_name" '{
@@ -65,7 +56,7 @@ while IFS= read -r line; do
       "security": "auto"
     }')
     config_file=$(echo "$config_file" | jq --argjson vm "$vm_server" '.outbounds += [$vm]')
-    logInfo "found vmess config $tag_name"
+    echo "found vmess config $tag_name"
   fi
   config_file=$(echo "$config_file" | jq --arg tag_name "$tag_name" '.outbounds[0].outbounds += [$tag_name]')
 done <<EOF
@@ -75,7 +66,7 @@ EOF
 config_file=$(echo "$config_file" | jq --argjson vm '{ "type": "direct", "tag": "direct" }' '.outbounds += [$vm]')
 
 now=$(date +%s)
-cp "${sing_config}" "${sing_config}${now}.bak"
+#cp "${sing_config}" "${sing_config}${now}.bak"
 echo "$config_file" >"${sing_config}"
 
-logInfo "Sing Box Subscription updated successfully"
+echo "Sing Box Subscription updated successfully"
