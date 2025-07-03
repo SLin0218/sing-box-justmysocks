@@ -57,14 +57,6 @@
   "route": {
     "rules": [
       {
-        "clash_mode": "Direct",
-        "outbound": "direct"
-      },
-      {
-        "clash_mode": "Global",
-        "outbound": "proxy"
-      },
-      {
         "type": "logical",
         "mode": "or",
         "rules": [
@@ -227,6 +219,14 @@
       {
         "ip_is_private": true,
         "outbound": "direct"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "proxy"
       }
     ],
     "rule_set": [
