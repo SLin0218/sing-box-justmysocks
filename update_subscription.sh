@@ -3,13 +3,10 @@
 # on termux, apt install jq. path = /data/data/com.termux/files/usr/bin/jq
 # on linux, apt install jq. path = /usr/bin/jq
 
-server=""
-id=""
-
 if command -v jq >/dev/null 2>&1; then
   echo "Using jq at $(jq --version)"
 else
-  if [ -d "/data/data/com.termux/files/usr/bin/jq" ]; then
+  if [ -f "/data/data/com.termux/files/usr/bin/jq" ]; then
     export PATH="$PATH:/data/data/com.termux/files/usr/bin/"
   else
     echo "jq is not installed. Please install jq to continue."
@@ -21,12 +18,18 @@ else
   echo "Using jq at $(jq --version)"
 fi
 
-subscription_url="https://justmysocks3.net/members/getsub.php?service=${server}&id=${id}"
+subscription_url="https://jmssub.net/members/getsub.php?service=${service}&id=${id}"
+echo $subscription_url
 
 # sing-box config file path
-sing_config_template="./config-template.json"
+current_dir=$(dirname "$(readlink -f "$0")")
+sing_config_template="$current_dir/config-template.json"
 
 subs_resp=$(curl -s "${subscription_url}")
+if [ -z "$subs_resp" ];then
+  echo Subscription response is empty
+fi
+
 config_file=$(jq '.outbounds = [{ "type": "urltest", "tag": "proxy", "outbounds": []}]' "${sing_config_template}")
 
 sing_config="/data/adb/box/sing-box/config.json"
