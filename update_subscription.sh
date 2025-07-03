@@ -24,10 +24,10 @@ fi
 subscription_url="https://justmysocks3.net/members/getsub.php?service=${server}&id=${id}"
 
 # sing-box config file path
-sing_config="./config-template.json"
+sing_config_template="./config-template.json"
 
 subs_resp=$(curl -s "${subscription_url}")
-config_file=$(jq '.outbounds = [{ "type": "urltest", "tag": "proxy", "outbounds": []}]' "${sing_config}")
+config_file=$(jq '.outbounds = [{ "type": "urltest", "tag": "proxy", "outbounds": []}]' "${sing_config_template}")
 
 sing_config="/data/adb/box/sing-box/config.json"
 
