@@ -1,232 +1,73 @@
 {
   "log": {
     "level": "info",
-    "output": "box.log",
-    "timestamp": true
+    "output": "box.log"
   },
   "dns": {
     "servers": [
       {
+        "tag": "google",
         "type": "udp",
-        "tag": "local",
-        "server": "223.5.5.5"
+        "server": "8.8.8.8",
+        "detour": "proxy"
       },
       {
-        "type": "fakeip",
-        "tag": "fakeip",
-        "inet4_range": "198.18.0.0/15",
-        "inet6_range": "fc00::/18"
+        "tag": "local",
+        "type": "udp",
+        "server": "223.5.5.5",
+        "detour": "direct"
       }
     ],
     "rules": [
       {
-        "clash_mode": "Direct",
+        "rule_set": "geosite-category-ads-all",
+        "action": "reject"
+      },
+      {
+        "rule_set": "geosite-geolocation-cn",
         "server": "local"
       },
       {
-        "clash_mode": "Global",
-        "server": "fakeip"
-      },
-      {
-        "rule_set": ["geosite-geolocation-cn", "geoip-cn"],
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": "geosite-geolocation-!cn",
+            "invert": true
+          },
+          {
+            "rule_set": "geoip-cn"
+          }
+        ],
         "server": "local"
-      },
-      {
-        "query_type": ["A", "AAAA"],
-        "server": "fakeip"
       }
     ]
   },
   "inbounds": [
     {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "127.0.0.1",
-      "listen_port": 8809,
-      "sniff": true
-    },
-    {
       "type": "tproxy",
       "tag": "tproxy-in",
       "listen": "127.0.0.1",
-      "listen_port": 9898,
-      "sniff": true
+      "listen_port": 9898
     }
   ],
   "outbounds": [],
   "route": {
     "rules": [
       {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "protocol": "dns"
-          },
-          {
-            "port": 53
-          }
-        ],
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
         "action": "hijack-dns"
-      },
-      {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "port": 853
-          },
-          {
-            "network": "udp",
-            "port": 443
-          },
-          {
-            "protocol": "stun"
-          }
-        ],
-        "action": "reject"
-      },
-      {
-        "rule_set": "geosite-category-ads-all",
-        "action": "reject"
-      },
-      {
-        "package_name": [
-          "com.tencent.mm",
-          "com.taobao.taobao",
-          "com.taobao.idlefish",
-          "com.bilibili.app.in",
-          "com.sankuai.meituan",
-          "com.jingdong.app.mall",
-          "cn.TuHu.android",
-          "com.oplus.account",
-          "com.oplus.atlas",
-          "com.oplus.appplatform",
-          "com.oplus.aod",
-          "com.oplus.apprecover",
-          "com.oplus.athena",
-          "com.oplus.audio.effectcenter",
-          "com.oplus.battery",
-          "com.oplus.beaconlink",
-          "com.oplus.blur",
-          "com.oplus.bootreg.res.overlay",
-          "com.oplus.bttestmode",
-          "com.oplus.cast",
-          "com.oplus.camera",
-          "com.oplus.cosa",
-          "com.oplus.cota",
-          "com.oplus.crashbox",
-          "com.oplus.customize.coreapp",
-          "com.oplus.dmp",
-          "com.oplus.dfs",
-          "com.oplus.deepthinker",
-          "com.oplus.eid",
-          "com.oplus.encryption",
-          "com.oplus.engineercamera",
-          "com.oplus.engineermode",
-          "com.oplus.engineernetwork",
-          "com.oplus.eyeprotect",
-          "com.oplus.exserviceui",
-          "com.oplus.exsystemservice",
-          "com.oplus.framework.rro.oneplus",
-          "com.oplus.framework.res.overlay",
-          "com.oplus.framework_bluetooth.overlay",
-          "com.oplus.games",
-          "com.oplus.gesture",
-          "com.oplus.healthservice",
-          "com.oplus.keyguard.clock.base",
-          "com.oplus.keyguard.clock.gallery",
-          "com.oplus.keyguard.clock.graffiti",
-          "com.oplus.keyguard.clock.magazine",
-          "com.oplus.linker",
-          "com.oplus.lfeh",
-          "com.oplus.location",
-          "com.oplus.locationproxy",
-          "com.oplus.logkit",
-          "com.oplus.mediacontroller",
-          "com.oplus.mediaturbo",
-          "com.oplus.member",
-          "com.oplus.melody",
-          "com.oplus.metis",
-          "com.oplus.multiapp",
-          "com.oplus.nas",
-          "com.oplus.ndsf",
-          "com.oplus.nfcengineertest",
-          "com.oplus.nhs",
-          "com.oplus.notificationmanager",
-          "com.oplus.nrMode",
-          "com.oplus.olc",
-          "com.oplus.onetrace",
-          "com.oplus.ota",
-          "com.oplus.owkservice",
-          "com.oplus.pantanal.ums",
-          "com.oplus.pay",
-          "com.oplus.phonemanager",
-          "com.oplus.plugin",
-          "com.oplus.portrait",
-          "com.oplus.postmanservice",
-          "com.oplus.powermonitor",
-          "com.oplus.pscanvas",
-          "com.oplus.qualityprotect",
-          "com.oplus.romupdate",
-          "com.oplus.sau",
-          "com.oplus.sauhelper",
-          "com.oplus.screenrecorder",
-          "com.oplus.screenshot",
-          "com.oplus.securepay",
-          "com.oplus.securitykeyboard",
-          "com.oplus.securitypermission",
-          "com.oplus.smartengine",
-          "com.oplus.stdid",
-          "com.oplus.stdsp",
-          "com.oplus.statistics.rom",
-          "com.oplus.subsys",
-          "com.oplus.systemui.plugins",
-          "com.oplus.tai.wifiqoe",
-          "com.oplus.trafficmonitor",
-          "com.oplus.upgradeguide",
-          "com.oplus.uxdesign",
-          "com.oplus.vdc",
-          "com.oplus.vip",
-          "com.oplus.virtualcomm",
-          "com.oplus.virtualcomm2",
-          "com.oplus.wallpapers",
-          "com.oplus.wifibackuprestore",
-          "com.oplus.wirelesssettings",
-          "com.coloros.activation",
-          "com.coloros.accessibilityassistant",
-          "com.coloros.bootreg",
-          "com.coloros.childrenspace",
-          "com.coloros.colordirectservice",
-          "com.coloros.floatassistant",
-          "com.coloros.lockassistant",
-          "com.coloros.ocrscanner",
-          "com.coloros.operationManual",
-          "com.coloros.oshare",
-          "com.coloros.ocs.opencapabilityservice",
-          "com.coloros.scenemode",
-          "com.coloros.smartsidebar",
-          "com.coloros.systemclone",
-          "com.coloros.translate.engine",
-          "com.coloros.weather.service"
-        ],
-        "outbound": "direct"
-      },
-      {
-        "rule_set": ["geosite-geolocation-cn", "geoip-cn"],
-        "outbound": "direct"
       },
       {
         "ip_is_private": true,
         "outbound": "direct"
       },
       {
-        "clash_mode": "Direct",
+        "rule_set": ["geosite-geolocation-cn", "geoip-cn"],
         "outbound": "direct"
-      },
-      {
-        "clash_mode": "Global",
-        "outbound": "proxy"
       }
     ],
     "rule_set": [
@@ -244,16 +85,20 @@
         "type": "remote",
         "tag": "geosite-category-ads-all",
         "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/refs/heads/rule-set/geosite-category-ads-all.srs"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-geolocation-!cn",
+        "format": "binary",
+        "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-geolocation-!cn.srs"
       }
     ],
     "final": "proxy",
-    "auto_detect_interface": false,
     "default_domain_resolver": "local"
   },
   "experimental": {
     "cache_file": {
       "enabled": true,
-      "store_fakeip": true,
       "store_rdrc": true
     },
     "clash_api": {
