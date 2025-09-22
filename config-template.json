@@ -13,7 +13,7 @@
       },
       {
         "tag": "local",
-        "type": "udp",
+        "type": "https",
         "server": "223.5.5.5"
       }
     ],
@@ -57,7 +57,16 @@
         "action": "sniff"
       },
       {
-        "protocol": "dns",
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "protocol": "dns"
+          },
+          {
+            "port": 53
+          }
+        ],
         "action": "hijack-dns"
       },
       {
@@ -65,7 +74,38 @@
         "outbound": "direct"
       },
       {
-        "rule_set": ["geosite-geolocation-cn", "geoip-cn"],
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "port": 853
+          },
+          {
+            "network": "udp",
+            "port": 443
+          },
+          {
+            "protocol": "stun"
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": ["geosite-geolocation-cn"],
+        "outbound": "direct"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "rule_set": "geoip-cn"
+          },
+          {
+            "rule_set": "geosite-geolocation-!cn",
+            "invert": true
+          }
+        ],
         "outbound": "direct"
       }
     ],
