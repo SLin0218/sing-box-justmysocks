@@ -48,6 +48,12 @@
       "tag": "tproxy-in",
       "listen": "127.0.0.1",
       "listen_port": 9898
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "0.0.0.0",
+      "listen_port": 7890
     }
   ],
   "outbounds": [],
@@ -91,6 +97,10 @@
         "action": "reject"
       },
       {
+        "domain": ["www.gstatic.com"],
+        "outbound": "proxy"
+      },
+      {
         "rule_set": ["geosite-geolocation-cn"],
         "outbound": "direct"
       },
@@ -113,16 +123,19 @@
       {
         "type": "remote",
         "tag": "geosite-geolocation-cn",
+        "format": "binary",
         "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-geolocation-cn.srs"
       },
       {
         "type": "remote",
         "tag": "geoip-cn",
+        "format": "binary",
         "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs"
       },
       {
         "type": "remote",
         "tag": "geosite-category-ads-all",
+        "format": "binary",
         "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/refs/heads/rule-set/geosite-category-ads-all.srs"
       },
       {
