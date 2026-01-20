@@ -97,7 +97,7 @@
         "action": "reject"
       },
       {
-        "domain": [".gstatic.com"],
+        "domain_suffix": [".gstatic.com"],
         "outbound": "proxy"
       },
       {
