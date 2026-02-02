@@ -1,13 +1,13 @@
 {
   "log": {
-    "level": "info",
+    "level": "error",
     "output": "box.log"
   },
   "dns": {
     "servers": [
       {
         "tag": "google",
-        "type": "udp",
+        "type": "tls",
         "server": "8.8.8.8",
         "detour": "proxy"
       },
@@ -40,7 +40,8 @@
         ],
         "server": "local"
       }
-    ]
+    ],
+    "strategy": "ipv4_only"
   },
   "inbounds": [
     {
@@ -48,12 +49,6 @@
       "tag": "tproxy-in",
       "listen": "127.0.0.1",
       "listen_port": 9898
-    },
-    {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "0.0.0.0",
-      "listen_port": 7890
     }
   ],
   "outbounds": [],
@@ -61,6 +56,14 @@
     "rules": [
       {
         "action": "sniff"
+      },
+      {
+        "clash_mode": "direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "global",
+        "outbound": "proxy"
       },
       {
         "type": "logical",
@@ -78,23 +81,6 @@
       {
         "ip_is_private": true,
         "outbound": "direct"
-      },
-      {
-        "type": "logical",
-        "mode": "or",
-        "rules": [
-          {
-            "port": 853
-          },
-          {
-            "network": "udp",
-            "port": 443
-          },
-          {
-            "protocol": "stun"
-          }
-        ],
-        "action": "reject"
       },
       {
         "domain_suffix": [".gstatic.com"],
