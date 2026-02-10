@@ -1,14 +1,14 @@
 {
   "log": {
-    "level": "error",
+    "level": "info",
     "output": "box.log"
   },
   "dns": {
     "servers": [
       {
-        "tag": "google",
+        "tag": "cf",
         "type": "tls",
-        "server": "8.8.8.8",
+        "server": "1.1.1.1",
         "detour": "proxy"
       },
       {
@@ -41,7 +41,8 @@
         "server": "local"
       }
     ],
-    "strategy": "ipv4_only"
+    "strategy": "ipv4_only",
+    "disable_cache": true
   },
   "inbounds": [
     {
@@ -143,8 +144,7 @@
       }
     ],
     "final": "proxy",
-    "auto_detect_interface": true,
-    "default_domain_resolver": "local"
+    "auto_detect_interface": true
   },
   "experimental": {
     "cache_file": {
