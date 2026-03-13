@@ -3,6 +3,9 @@
 # on termux, apt install jq. path = /data/data/com.termux/files/usr/bin/jq
 # on linux, apt install jq. path = /usr/bin/jq
 
+service=
+id=
+
 if command -v jq >/dev/null 2>&1; then
   echo "Using jq at $(jq --version)"
 else
@@ -32,7 +35,7 @@ fi
 
 config_file=$(jq '.outbounds = [{ "type": "urltest", "tag": "proxy", "outbounds": []}]' "${sing_config_template}")
 
-sing_config="/data/adb/box/sing-box/config.json"
+sing_config="/etc/sing-box/config.json"
 
 while IFS= read -r line; do
   # Decode the base64 encoded string
