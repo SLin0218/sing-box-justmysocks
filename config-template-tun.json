@@ -95,7 +95,7 @@
         "outbound": "direct"
       },
       {
-        "domain_suffix": [".gstatic.com"],
+        "domain_suffix": [".gstatic.com", ".googleapis.com", ".googletagmanager.com"],
         "outbound": "proxy"
       },
       {

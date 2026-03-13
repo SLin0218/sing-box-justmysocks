@@ -1,19 +1,19 @@
 {
   "log": {
-    "level": "error",
+    "level": "info",
     "output": "box.log"
   },
   "dns": {
     "servers": [
       {
-        "tag": "google",
+        "tag": "cf",
         "type": "tls",
-        "server": "8.8.8.8",
+        "server": "1.1.1.1",
         "detour": "proxy"
       },
       {
         "tag": "local",
-        "type": "https",
+        "type": "tls",
         "server": "223.5.5.5"
       }
     ],
@@ -83,7 +83,11 @@
         "outbound": "direct"
       },
       {
-        "domain_suffix": [".gstatic.com"],
+        "domain_suffix": [
+          ".gstatic.com",
+          ".googleapis.com",
+          ".googletagmanager.com"
+        ],
         "outbound": "proxy"
       },
       {
@@ -132,7 +136,7 @@
       }
     ],
     "final": "proxy",
-    "default_domain_resolver": "local"
+    "default_domain_resolver": "cf"
   },
   "experimental": {
     "cache_file": {
